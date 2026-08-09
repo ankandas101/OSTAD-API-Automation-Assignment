@@ -12,6 +12,7 @@ This project contains automated API test scenarios for the **ReqRes API** using 
 
 ---
 
+
 ## Assignment Scenarios
 
 ### Q3 — Login with Registered Credentials
@@ -50,7 +51,7 @@ OSTAD-API-Automation-Assignment/
 │   └── OSTAD_API_Automation_Assignment.postman_collection.json
 ├── environments/
 │   └── OSTAD_API_Assignment_Environment.postman_environment.json
-├── reports/
+├── reports/ 
 │   └── api-report.html
 └── README.md
 ```
