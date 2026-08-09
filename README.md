@@ -75,6 +75,13 @@ npm -v
 
 ---
 
+## use this to Clone
+```bash
+git clone https://github.com/ankandas101/OSTAD-API-Automation-Assignment.git
+
+cd OSTAD-API-Automation-Assignment
+```
+
 ## Install Newman
 
 ```bash
