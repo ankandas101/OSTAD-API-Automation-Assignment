@@ -1,0 +1,626 @@
+{
+  "info": {
+    "_postman_id": "dc1eccae-8c12-47b2-9a02-744d1d697f0b",
+    "name": "OSTAD_API_Automation_Assignment",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53079026",
+    "_collection_link": "https://go.postman.co/collection/53079026-dc1eccae-8c12-47b2-9a02-744d1d697f0b?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Q3-Login & Capture Token",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "if (!pm.request.headers.has('x-api-key')) {",
+              "    pm.request.headers.add({",
+              "        key: 'x-api-key',",
+              "        value: pm.environment.get('apiKey')",
+              "    });",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// 1. Verify status code",
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// 2. Convert response to JSON",
+              "const resquestData = pm.response.json();",
+              "",
+              "// 3. Verify token exists",
+              "",
+              "pm.test(\"Login response should contain auth token\", function () {",
+              "    pm.expect(resquestData).to.have.property(\"token\");",
+              "    pm.expect(resquestData.token).to.be.a(\"string\");",
+              "    pm.expect(resquestData.token.length).to.be.greaterThan(5);",
+              "});",
+              "",
+              "// 4. Store token into environment variable",
+              "pm.environment.set(\"authToken\", resquestData.token);",
+              "",
+              "// 5. Print token in Console",
+              "console.log(\"Captured Auth Token:\", resquestData.token);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "x-api-key",
+            "value": "{{apiKey}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"email\": \"eve.holt@reqres.in\",\n    \"password\": \"cityslicka\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Q4 - GET User by userId",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.environment.set(\"userId\",10); //set the enviroment variable userID "
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "//Veify the satus code is 200",
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const requestData = pm.response.json();",
+              "",
+              "//verify that user id is mached",
+              "pm.test(\"Returned user ID should match variable\", function () {",
+              "    pm.expect(requestData.data.id).to.eql(Number(pm.environment.get(\"userId\")));",
+              "});",
+              "",
+              "//verify first Name for User id = 10",
+              "pm.test(\"First name should be Byron\", function () {",
+              "    pm.expect(requestData.data.first_name).to.eql(\"Byron\");",
+              "});",
+              "// verify the email address",
+              "pm.test(\"Email should match expected value\", function () {",
+              "    pm.expect(requestData.data.email)",
+              "        .to.eql(\"byron.fields@reqres.in\");",
+              "});",
+              "",
+              "// First Name and Email store in environment variables",
+              "pm.environment.set(\"firstName\", requestData.data.first_name);",
+              "pm.environment.set(\"email\", requestData.data.email);",
+              "",
+              "console.log(\"Stored First Name:\", requestData.data.first_name);",
+              "console.log(\"Stored Email:\", requestData.data.email);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "x-api-key",
+            "value": "{{apiKey}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"email\": \"eve.holt@reqres.in\",\n    \"password\": \"cityslicka\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/users/{{userId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "users",
+            "{{userId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Q5 - PUT Updated Profile",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Status code validation",
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const res = pm.response.json();",
+              "",
+              "// Verify updated name",
+              "pm.test(\"Name should be updated\", function () {",
+              "    pm.expect(res.name).to.eql(\"Ankan Das\");",
+              "});",
+              "",
+              "// Verify updated job",
+              "pm.test(\"Job should be updated\", function () {",
+              "    pm.expect(res.job).to.eql(\"Jr QA Engineer\");",
+              "});",
+              "",
+              "// Verify updatedAt exists",
+              "pm.test(\"updatedAt timestamp should exist\", function () {",
+              "    pm.expect(res.updatedAt).to.exist;",
+              "});",
+              "",
+              "// Verify updatedAt is a valid ISO timestamp",
+              "pm.test(\"updatedAt should be a valid ISO timestamp\", function () {",
+              "    const date = new Date(res.updatedAt);",
+              "",
+              "    pm.expect(date.toISOString()).to.eql(res.updatedAt);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{apiKey}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Ankan Das\",\n  \"job\": \"Jr QA Engineer\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/users/{{userId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "users",
+            "{{userId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Q6 - PATCH Single Field",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Verify status code",
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "const resquestData = pm.response.json();",
+              "",
+              "// Verify update field value",
+              "",
+              "pm.test(\"Job field should be updated\", function () {",
+              "    pm.expect(resquestData).to.have.property(\"job\");",
+              "    pm.expect(resquestData.job).to.eql(\"OSTAD API Automation Assignment\");",
+              "});",
+              "",
+              "// Verify that only job field is changed",
+              "pm.test(\"Only job field was changed\", function () {",
+              "    pm.expect(resquestData).to.not.have.property(\"name\");",
+              "});",
+              "",
+              "//verify that the timestamp is present",
+              "pm.test(\"updatedAt timestamp should exist\", function () {",
+              "    pm.expect(resquestData).to.have.property(\"updatedAt\");",
+              "});",
+              "",
+              "//verify that the timestamp is a valid",
+              "pm.test(\"updatedAt should be a valid timestamp\", function () {",
+              "    const isoRegex = /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$/;",
+              "    pm.expect(resquestData.updatedAt).to.match(isoRegex);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{apiKey}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"job\": \"OSTAD API Automation Assignment\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/users/{{userId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "users",
+            "{{userId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Q8.1 - Login Without Password",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Verify Response code",
+              "pm.test(\"Status code should be 400\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "const resquestData = pm.response.json();",
+              "",
+              "// Verify the error message from the response body.",
+              "pm.test(\"Error message should be 'Missing password'\", function () {",
+              "    pm.expect(resquestData.error).to.eql(\"Missing password\");",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{apiKey}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"eve.holt@reqres.in\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Q8.2 - Login Without Email",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Verify the Response code",
+              "pm.test(\"Status code should be 400\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "const resquestData = pm.response.json();",
+              "",
+              "// Verify the error message from the response body.",
+              "pm.test(\"Error message should be 'Missing email or username'\", function () {",
+              "    pm.expect(resquestData.error).to.eql(\"Missing email or username\");",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{apiKey}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"password\": \"cityslicka\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Q8.3 - Register Without Password",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Verify Response code",
+              "pm.test(\"Status code should be 400\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "const resquestData = pm.response.json();",
+              "",
+              "pm.test(\"Error message should be contain 'Missing password'\", function () {",
+              "    pm.expect(resquestData.error).to.eql(\"Missing password\");",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{apiKey}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"eve.holt@reqres.in\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Q8.4 - Invalid User Using Stored Variable",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// Use an invalid user id derived from stored data",
+              "const invalidId = Number(pm.environment.get(\"userId\")) + 999999;",
+              "pm.variables.set(\"invalidUserId\", invalidId);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "//verify response status code is 404",
+              "pm.test(\"Status code should be 404\", function () {",
+              "    pm.response.to.have.status(404);",
+              "});",
+              "",
+              "//verify response body is empty for invalid user",
+              "pm.test(\"Response body should be empty for invalid user\", function () {",
+              "    pm.expect(pm.response.text()).to.not.be.undefined;",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{apiKey}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/users/{{invalidUserId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "users",
+            "{{invalidUserId}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
