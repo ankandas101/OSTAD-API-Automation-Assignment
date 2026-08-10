@@ -11,7 +11,12 @@ This project contains automated API test scenarios for the **ReqRes API** using 
 🌐 https://ankandas.me
 
 ---
+## Video Presentaion
+<a href="https://www.youtube.com/watch?v=nUAX80b2b7k" target="_blank">
+To khow about this project, please watch this Youtube Video 
+</a>
 
+---
 
 ## Assignment Scenarios
 
@@ -75,7 +80,7 @@ npm -v
 
 ---
 
-## use this to Clone
+## To Clone this project
 ```bash
 git clone https://github.com/ankandas101/OSTAD-API-Automation-Assignment.git
 
@@ -197,10 +202,7 @@ xdg-open reports/api-report.html
 | Invalid user lookup | **404** |
 
 ---
-## Video Tutorial
-<a href="https://www.youtube.com/watch?v=nUAX80b2b7k" target="_blank">
-To khow about this project watch This Video Tutorial 
-</a>
+
 
 ## Local Execution Verification 
 
